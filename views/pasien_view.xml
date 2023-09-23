@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rumahsakit_pasien_tree" model="ir.ui.view">
+        <field name="name">pasien.rumahsakit.tree</field>
+        <field name="model">pasien.rumahsakit</field>
+        <field name="arch" type="xml">
+            <tree>
+<!-- pd tree tag, attb create="0" akan menghilangkan tombol Create pada halaman list,
+            dan attb delete="0" akan menghilangkan tombol Delete -->
+                <field name="ref_id"></field>
+                <field name="name"></field>
+                <field name="age"></field>
+                <field name="gender"></field>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_rumahsakit_pasien_form" model="ir.ui.view">
+        <field name="name">pasien.rumahsakit.form</field>
+        <field name="model">pasien.rumahsakit</field>
+        <field name="arch" type="xml">
+            <form>
+<!-- pd form tag, attb create="0" akan menghilangkan tombol Create & Duplicate pada halaman form,
+                dan attb delete="0" akan menghilangkan tombol Delete,
+                dan attb edit="0" akan menghilangkan tombol Edit -->
+<!-- sheet tag membuat halaman form seperti efek kertas -->
+                <sheet>
+                    <group name="pasien_form" string="Data Diri Pasien">
+<!-- group tag bisa membuat konten halaman menjadi 2 kolom -->
+                        <group>
+                            <field name="ref_id"></field>
+                            <field name="name"></field>
+                            <field name="tgl_lahir"></field>
+                            <field name="age"></field>
+                        </group>
+                        <group>
+                            <field name="gender"></field>
+                            <field name="active" invisible="1"></field>
+                        </group>
+                    </group>
+                </sheet>
+<!-- Chatter, sbg tempat diskusi pd form, juga sbg riwayat perubahan (jika tracking=True) -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"></field>
+                    <field name="activity_ids"></field>
+                    <field name="message_ids"></field>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rumahsakit_pasien_search" model="ir.ui.view">
+        <field name="name">pasien.rumahsakit.search</field>
+        <field name="model">pasien.rumahsakit</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ref_id" filter_domain="['|', ('ref_id', 'ilike', self), ('name', 'ilike', self)]"></field>
+<!-- attb filter domain, membuat hasil pencarian search bar berdasarkan isi filter_domain, 
+                dgn rumus ('namafield', 'ilike', self) dgn '|' sebagai operator AND jika lebih dari 1 field -->
+                <field name="name"></field>
+                <field name="age"></field>
+                <field name="gender"></field>
+<!-- dibawah ini menambahkan pilihan filter tanpa harus Add Custom Filter pada Odoo -->
+                <filter name="filter_pria" string="JK: Pria" domain="[('gender', '=', 'pria')]" />
+                <filter name="filter_wanita" string="JK: Wanita" domain="[('gender', '=', 'wanita')]" />
+                <separator/> <!--operator AND pada filter -->
+<!-- <filter name="filter_anak" string="Anak-anak" domain="[('age', '&lt;=', 5)]" /> -->
+                <filter name="filter_archive" string="Archive" domain="[('active', '=', False)]" />
+<!-- XML has just five special characters, all they has corresponding codes:
+                &lt; (<), &amp; (&), &gt; (>), &quot; ("), and &apos; ('). -->
+<!-- dibawah ini menambahkan pilihan group tanpa harus Add Custom Group pada Odoo -->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_gender" string="Jenis Kelamin" context="{'group_by': 'gender'}" />
+                </group>
+                <searchpanel>
+<!-- searchpanel menambahkan menu navigasi disebelah kiri website -->
+                    <field name="gender" enable_counters="1" select="multi"></field>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rumahsakit_pasien" model="ir.actions.act_window">
+        <field name="name">Semua Pasien</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pasien.rumahsakit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+<!-- context diatas ^ diisi supaya filter dan group dipilih otomatis saat membuka halaman,
+        dengan rumus filter {'search_default_namafilter':1} dan rumus group {'search_default_namagroup':1} -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Silahkan tekan tombol Create untuk membuat Data Pasien.
+            </p>
+        </field>
+    </record>
+
+    <menuitem   id="pasien_menu"
+                name="Semua Pasien"
+                action="action_rumahsakit_pasien"
+                parent="pasien_master_menu"
+                sequence="0" />
+
+</odoo>

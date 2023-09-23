@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rumahsakit_janjitemu_tree" model="ir.ui.view">
+        <field name="name">janjitemu.rumahsakit.tree</field>
+        <field name="model">janjitemu.rumahsakit</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="status == 'selesai'" 
+            decoration-info="status == 'draft'"
+            decoration-danger="status == 'batal'"
+            decoration-muted="status == 'sedang_konsul'"
+            decoration-warning="status == 'rawatinap'">
+<!-- optional attb, menampilkan 3 dots pada ujung kanan tabel untuk menampilkan/menyembunyikan field tersebut -->
+                <field name="pasien_id" optional="show"></field>
+                <field name="ref_id" optional="show"></field>
+                <field name="dokter_id" widget="many2one_avatar_user"></field>
+                <field name="waktu_janji"></field>
+                <field name="tanggal_booking"></field>
+                <field name="activity_ids" widget="list_activity"></field>
+<!-- widget="badge" untuk menampilkan bentuk melingkar pada kalimat -->
+                <field name="status" widget="badge" 
+                decoration-success="status == 'selesai'" 
+                decoration-info="status == 'draft'"
+                decoration-danger="status == 'batal'"
+                decoration-muted="status == 'sedang_konsul'"
+                decoration-warning="status == 'rawatinap'">
+<!-- decoration untuk memilih warna badge/text, success=hijau, info=cyan, danger=merah, muted=abu, warning=oren -->
+                </field>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_rumahsakit_janjitemu_form" model="ir.ui.view">
+        <field name="name">janjitemu.rumahsakit.form</field>
+        <field name="model">janjitemu.rumahsakit</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+<!-- statusbar menampilkan bar status, dan clickable attb supaya statusbar tersebut bisa diklik -->
+                    <field name="status" widget="statusbar" nolabel="1" options="{'clickable': '1'}" 
+                    statusbar_visible="draft,sedang_konsul,rawatinap,selesai,batal"></field>
+                </header>
+                <sheet>
+                    <div>
+                        <h1>
+                            <field name="prioritas" widget="priority"></field>
+                        </h1>
+                    </div>
+                    <group name="janjitemu_form" string="Data Janji Temu">
+                        <group>
+                            <field name="pasien_id"></field>
+                            <field name="ref_id"></field>
+                            <field name="tanggal_booking"></field>
+<!-- many2one_avatar_user untuk menampilkan foto user yg dipilih dan bisa diklik untuk di chat -->
+                            <field name="dokter_id" widget="many2one_avatar_user"></field>
+                            <field name="gender" help="Tidak bisa diubah karena sesuai dengan database Pasien"></field>
+                        </group>
+                        <group>
+                            <field name="waktu_janji"></field>
+<!-- Button tipe Object dan Action, tipe object akan eksekusi function pada .py file, tipe action akan membuka action pada .xml file -->
+                            <button name="action_test" type="object" string="Tombol Object Test" class="oe_highlight"
+                            help="Tombol yang menampilkan pesan peringatan"></button>
+                            <button name="%(action_rumahsakit_pasien)d" type="action" string="Tombol Action Test" class="oe_highlight"
+                            confirm="Pergi ke halaman Semua Pasien?"
+                            help="Tombol yang mengalihkan ke halaman Semua Pasien"></button>
+                        </group>
+                    </group>
+<!-- notebook tag, membuat form memiliki halaman, dgn page tag untuk menambah halamannya -->
+                    <notebook>
+                        <page name="resep" string="Resep">
+                            <field name="resep" placeholder="Tambahkan obat sebagai Resep disini."></field>
+                        </page>
+                        <page name="klinik" string="Klinik">
+                            <field name="klinik" placeholder="Tambahkan nama Klinik untuk Resep terkait disini."></field>
+                        </page>
+                    </notebook>
+                </sheet>
+<!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"></field>
+                    <field name="activity_ids"></field>
+                    <field name="message_ids"></field>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rumahsakit_janjitemu_search" model="ir.ui.view">
+        <field name="name">janjitemu.rumahsakit.search</field>
+        <field name="model">janjitemu.rumahsakit</field>
+        <field name="arch" type="xml">
+            <search>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rumahsakit_janjitemu" model="ir.actions.act_window">
+        <field name="name">Semua Janji Temu</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">janjitemu.rumahsakit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Silahkan tekan tombol Create untuk membuat Data Janji Temu.
+            </p>
+        </field>
+    </record>
+
+    <menuitem   id="janjitemu_menu"
+                name="Semua Janji Temu"
+                action="action_rumahsakit_janjitemu"
+                parent="janjitemu_master_menu"
+                sequence="10" />
+                
+</odoo>

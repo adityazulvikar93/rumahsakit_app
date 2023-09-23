@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem   id="rumahsakit_root_menu"
+                name="Rumah Sakit"
+                web_icon="rumahsakit_app.static/description/icon.png" 
+                sequence="0" />
+<!-- web_icon ini untuk menampilkan icon jk pakai addon web_responsive odoo enterprise edition-->
+
+    <menuitem   id="pasien_master_menu"
+                name="Data Pasien"
+                parent="rumahsakit_root_menu"
+                sequence="0" />
+
+    <menuitem   id="janjitemu_master_menu"
+                name="Janji Temu"
+                parent="rumahsakit_root_menu"
+                sequence="0" />   
+
+</odoo>

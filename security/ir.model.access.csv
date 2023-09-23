@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+rumahsakit_app.access_pasien_rumahsakit,access_pasien_rumahsakit,rumahsakit_app.model_pasien_rumahsakit,base.group_user,1,1,1,1
+rumahsakit_app.access_janjitemu_rumahsakit,access_janjitemu_rumahsakit,rumahsakit_app.model_janjitemu_rumahsakit,base.group_user,1,1,1,1
